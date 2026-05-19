@@ -17,7 +17,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
+      "img-src 'self' data: blob: https: https://*.public.blob.vercel-storage.com",
       "font-src 'self'",
       "frame-src https://js.stripe.com https://hooks.stripe.com",
       "worker-src blob:",
