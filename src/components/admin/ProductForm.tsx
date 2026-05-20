@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { toBlobSrc } from "@/utils/image";
 
 interface ProductFormValues {
   name: string;
@@ -201,7 +202,7 @@ export function ProductForm({ initialValues, productId }: ProductFormProps) {
               <div key={i} className="relative group">
                 <div className="relative h-24 w-24 overflow-hidden rounded-md border border-gray-200 bg-gray-100">
                   <Image
-                    src={src}
+                    src={toBlobSrc(src)}
                     alt={`Product image ${i + 1}`}
                     fill
                     sizes="96px"

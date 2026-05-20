@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+
 import { PrismaClient, Role, OrderStatus, PaymentStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 

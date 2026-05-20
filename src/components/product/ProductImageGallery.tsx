@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
+import { toBlobSrc } from "@/utils/image";
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -11,9 +12,8 @@ interface ProductImageGalleryProps {
 
 export function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
   const [selected, setSelected] = useState(0);
-  const displayImages = images.length > 0
-    ? images
-    : ["https://placehold.co/800x800?text=No+Image"];
+  const displayImages = (images.length > 0 ? images : ["https://placehold.co/800x800?text=No+Image"])
+    .map(toBlobSrc);
 
   return (
     <div className="flex flex-col gap-3">

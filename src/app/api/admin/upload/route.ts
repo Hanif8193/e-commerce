@@ -49,10 +49,11 @@ export async function POST(request: Request) {
     const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
     const filename = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-    const blob = await put(filename, file, { access: "public" });
+    const blob = await put(filename, file, { access: "private" });
 
     return NextResponse.json({ url: blob.url });
-  } catch {
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Upload failed: ${message}` }, { status: 500 });
   }
 }

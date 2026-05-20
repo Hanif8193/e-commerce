@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { StockBadge } from "./StockBadge";
 import { formatCurrency } from "@/utils/format";
+import { toBlobSrc } from "@/utils/image";
 import type { Decimal } from "@prisma/client/runtime/library";
 
 interface ProductCardProps {
@@ -17,7 +18,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
-  const imageUrl = product.images[0] ?? "https://placehold.co/400x400?text=No+Image";
+  const imageUrl = toBlobSrc(product.images[0] ?? "https://placehold.co/400x400?text=No+Image");
 
   return (
     <Link
