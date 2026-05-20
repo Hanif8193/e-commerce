@@ -22,7 +22,10 @@ export default async function CheckoutPage() {
   }));
 
   const origin =
-    process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+    process.env.NEXTAUTH_URL ??
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3001");
   const returnUrl = `${origin}/checkout/success`;
 
   return (
