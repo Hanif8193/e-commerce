@@ -84,3 +84,11 @@ export async function clearCart(userId: string) {
   if (!cart) return;
   await db.cartItem.deleteMany({ where: { cartId: cart.id } });
 }
+
+export async function getCartItemCount(userId: string): Promise<number> {
+  const result = await db.cartItem.aggregate({
+    where: { cart: { userId } },
+    _sum: { quantity: true },
+  });
+  return result._sum.quantity ?? 0;
+}

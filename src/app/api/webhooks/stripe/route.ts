@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { createOrderFromPaymentIntent } from "@/services/order.service";
+import { db } from "@/lib/db";
 import type Stripe from "stripe";
 
 export const runtime = "nodejs";
@@ -29,6 +30,14 @@ export async function POST(request: Request) {
       console.error("Order creation failed:", err);
       return NextResponse.json({ error: "Order creation failed" }, { status: 500 });
     }
+  }
+
+  if (event.type === "payment_intent.payment_failed") {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    await db.payment.updateMany({
+      where: { stripePaymentIntentId: paymentIntent.id },
+      data: { status: "FAILED" },
+    });
   }
 
   return NextResponse.json({ received: true });

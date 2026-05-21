@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import {
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
     }
 
     const product = await createProduct(parsed.data);
+    revalidatePath("/products");
     return NextResponse.json(product, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });

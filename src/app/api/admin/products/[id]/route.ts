@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import {
   updateProduct,
-  hardDeleteProduct,
+  softDeleteProduct,
 } from "@/services/product.service";
 import { updateProductSchema } from "@/utils/validation";
 import type { Session } from "next-auth";
@@ -34,6 +35,8 @@ export async function PATCH(
     }
 
     const product = await updateProduct(params.id, parsed.data);
+    revalidatePath("/products");
+    revalidatePath(`/products/${params.id}`);
     return NextResponse.json(product);
   } catch {
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
@@ -49,11 +52,12 @@ export async function DELETE(
   if (deny) return deny;
 
   try {
-    await hardDeleteProduct(params.id);
+    await softDeleteProduct(params.id);
+    revalidatePath("/products");
+    revalidatePath(`/products/${params.id}`);
     return new NextResponse(null, { status: 204 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to delete product";
-    const status = message.includes("Cannot delete") ? 409 : 500;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

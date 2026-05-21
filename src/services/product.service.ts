@@ -89,6 +89,16 @@ export async function softDeleteProduct(id: string) {
   await db.product.update({ where: { id }, data: { active: false } });
 }
 
+export async function getCategories(): Promise<string[]> {
+  const rows = await db.product.findMany({
+    where: { active: true },
+    select: { category: true },
+    distinct: ["category"],
+    orderBy: { category: "asc" },
+  });
+  return rows.map((r) => r.category);
+}
+
 export async function hardDeleteProduct(id: string) {
   const orderItemCount = await db.orderItem.count({ where: { productId: id } });
   if (orderItemCount > 0) {
